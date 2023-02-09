@@ -2,7 +2,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const CORS = require("cors");
 const mysql2 = require("mysql2");
-const Joi = require("joi");
 const multer = require("multer");
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -44,14 +43,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const PORT = 3000;
-app.set('trust proxy', true)
+app.set("trust proxy", true);
 app.all("/*", (req, res, next) => {
   // req.headers["x-forwarded-for","172.16.18.51"];
-  
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000 http://172.16.18.51:3000");
+
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "http://localhost:3000 http://172.16.18.51:3000"
+  );
 
   // Request methods you wish to allow
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
 
   // Request headers you wish to allow
   // res.setHeader("Access-Control-Allow-Headers", "*");
@@ -67,7 +72,6 @@ app.all("/*", (req, res, next) => {
 
 app.get("/getData/:id", CORS(), async (req, res, next) => {
   try {
-    
     const id = req.params.id;
 
     if (!!id) {
@@ -77,7 +81,7 @@ app.get("/getData/:id", CORS(), async (req, res, next) => {
         if (!err) {
           if (results.length == 0)
             return res.json({
-              Response: "No data available..! Please check your emplyee id",
+              message: "No data available..! Please check your employee id",
             });
           if (!!results[0].resume_data) {
             let jsonData = JSON.parse(results[0].resume_data);
@@ -89,16 +93,21 @@ app.get("/getData/:id", CORS(), async (req, res, next) => {
             .json({ data: results[0].resume_data, image: results[0].image });
         } else {
           console.log("Error in requesting data", err);
-          res.status(400).json({ Error: "err.message" });
+          res.status(400).json({
+            message:
+              "Something went wrong ..! Please check your employee id and try again ....!",
+          });
         }
       });
     } else {
       console.log("No Record Found", err);
-      res.status(400).json({ Error: err.message });
+      res.status(400).json({ message: "No Record Found" });
     }
   } catch (error) {
-    console.log("error", error);
-    res.status(400).json({ Error: "Error" });
+    console.log("Error in getting data ====>", error);
+    res
+      .status(400)
+      .json({ Error: "Something went wrong ...! Please try again ...!" });
   }
 });
 
@@ -107,21 +116,16 @@ app.post("/postData", CORS(), async (req, res, next) => {
     req.headers["172.16.18.51"];
     let imageUrl;
     if (!req.file) {
-      res.json({ Error: "Please enter a image" });
+      res.json({ message: "Please enter a image" });
     } else {
       imageUrl = req.file.filename;
     }
     const { emp_id, emp_email, resume_data } = req.body;
-    const schema = Joi.object({
-      email: Joi.string()
-        .lowercase()
-        .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }),
-    });
-    console.log("=====>", emp_email);
+
     const is_valid = ValidateEmail(emp_email);
     if (!is_valid)
       return res.status(400).json({ Error: "Please enter a valid email" });
-    const data = JSON.stringify(req.body.resume_data);
+    const data = JSON.stringify(resume_data);
     const query =
       "INSERT INTO tbl_cv(emp_id,emp_email,image,resume_data) VALUES ?";
     const value = [[emp_id, emp_email, imageUrl, data]];
@@ -135,11 +139,12 @@ app.post("/postData", CORS(), async (req, res, next) => {
         console.log(results);
       } else {
         console.log("error", err);
-        res.status(400).send({ Response: "Invalid id" });
+        res.status(400).send({ message: "Invalid id" });
       }
     });
   } catch (error) {
     console.log("error", error);
+    res.sendStatus(400).json({ message: "Something went wrong" });
   }
 });
 
