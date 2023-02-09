@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const CORS = require("cors");
 const mysql2 = require("mysql2");
 const multer = require("multer");
+const { exec } = require("child_process");
+
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "./uploads");
@@ -31,16 +33,17 @@ const sql = mysql2.createConnection({
 });
 
 const app = express();
+app.use(CORS());
 app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
 );
 app.use(express.static("uploads"));
 app.use("/uploads", express.static("uploads"));
-app.use(CORS());
 app.options("*", CORS());
 // app.use(forms.array());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.set("view engine", "ejs");
 
 const PORT = 3000;
 app.set("trust proxy", true);
@@ -68,6 +71,54 @@ app.all("/*", (req, res, next) => {
   // res.setHeader("Access-Control-Expose-Headers","*://localhost:*/*")
   // req.headers["172.16.18.51"];
   next();
+});
+
+app.get("/forpdf/:id", (req, res, next) => {
+  const id = req.params.id;
+  if (!id) return res.sendStatus(400).json({ Message: "Enter Id" });
+
+  // const query = `SELECT * FROM tbl_cv where emp_id = ${id}`;
+  const query = `SELECT * FROM tbl_cv where emp_id = ${id}`;
+
+  sql.query(query, function (err, results) {
+    if (!err) {
+      if (results.length == 0)
+        return res.json({
+          message: "No data available..! Please check your employee id",
+        });
+      if (!!results[0].resume_data) {
+        let jsonData = JSON.parse(results[0].resume_data);
+        results[0].resume_data = jsonData.replace(/\\\n/g, "");
+      }
+      results[0].image = "http://172.16.16.147:3000/" + results[0].image;
+
+      const data = JSON.parse(results[0].resume_data);
+      const candidate_code = data.aboutMe.candidate_code;
+      const email = data.aboutMe.email;
+      const description = data.aboutMe.description;
+      const education = data.aboutMe.education;
+      console.log("===========================", data.aboutMe.education);
+
+      res.render("testcopy", {
+        code: candidate_code,
+        email: email,
+        description: description,
+        education: education,
+        data: data,
+        image: results[0].image,
+      });
+    } else {
+      console.log("Error in requesting data", err);
+      res.status(400).json({
+        message:
+          "Something went wrong ..! Please check your employee id and try again ....!",
+      });
+    }
+  });
+});
+
+app.get("/test", (req, res, next) => {
+  res.render("testcopy");
 });
 
 app.get("/getData/:id", CORS(), async (req, res, next) => {
@@ -116,7 +167,7 @@ app.post("/postData", CORS(), async (req, res, next) => {
     req.headers["172.16.18.51"];
     let imageUrl;
     if (!req.file) {
-      res.json({ message: "Please enter a image" });
+      res.json({ message: "Please provide image" });
     } else {
       imageUrl = req.file.filename;
     }
@@ -166,3 +217,21 @@ function ValidateEmail(mail) {
   alert("You have entered an invalid email address!");
   return false;
 }
+function cmd(cmd) {
+  exec(cmd, (error, stdout, stderr) => {
+    if (error) {
+      console.log(`error: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      console.log(`stderr: ${stderr}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+  });
+}
+// cmd("wkhtmltopdf http://172.16.16.147:3000/getData/681 '/home/kalpesh/Desktop/mySql_pro/te.pdf'")
+// cmd("wkhtmltopdf http://172.16.16.147:3000/forpdf '/home/kalpesh/Desktop/mySql_pro/te.pdf'")
+// cmd(
+//   "wkhtmltopdf http://172.16.16.147:3000/forpdf/681 '/home/kalpesh/Desktop/mySql_pro/test.pdf'"
+// );
