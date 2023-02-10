@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= data.aboutMe.candidate_code%></title>
     <link rel="stylesheet" href="../uploads/app.css">
-
   </head>
   <body>
-    <div class="innerr">
+    <br><br>
+    
     <div class="inner">
       <div style="margin-left: 50px; margin-right: 50px">
         <div style="width: 24%; float: left">
@@ -35,6 +35,8 @@
                 margin-top: 100px;
                 vertical-align: middle;
                 object-fit: cover;
+                width: 100%;
+                height: auto;
               "
             />
             <div
@@ -72,43 +74,43 @@
               </div>
               <%}%>
               </div>
-            </div>
-            
-            <div class="spaces">
-            
-              <h1 class="title-sidebar">Certificate</h1>
-              <ul>
-              <% for (let certi of data.extraSkill.certificate) { %>
-                <li><%= certi.certificate%></li>
-                <%}%>
-              </ul>
-            </div>
-            
-            <div class="spaces">
-              <h1 class="title-sidebar">Training</h1>
+              
+              <div class="spaces" >
+                
+                <h1 class="title-sidebar">Certificate</h1>
                 <ul>
-                  <% for (let training of data.extraSkill.training) { %>
-                    <li><%= training.training%></li>
+                  <% for (let certi of data.extraSkill.certificate) { %>
+                    <li><%= certi.certificate%></li>
                     <%}%>
                   </ul>
-            </div>
-            <div class="spaces">
-              <h1 class="title-sidebar">Awards</h1>
-              <ul>
-                <% for (let award of data.extraSkill.award) { %>
-                  <li><%= award.award%></li>
-                  <%}%>
-              </ul>
-            </div>
-            <div class="spaces">
-              <h1 class="title-sidebar">Education</h1>
-              <ul>
-                <% for (let edu of data.aboutMe.education) { %>
-                  <li><%= edu.education%></li>
-                  <%}%>
-              </ul>
-
-            </div>
+                </div>
+                
+                <div class="spaces">
+                  <h1 class="title-sidebar">Training</h1>
+                  <ul>
+                    <% for (let training of data.extraSkill.training) { %>
+                      <li><%= training.training%></li>
+                      <%}%>
+                    </ul>
+                  </div>
+                  <div class="spaces">
+                    <h1 class="title-sidebar">Awards</h1>
+                    <ul>
+                      <% for (let award of data.extraSkill.award) { %>
+                        <li><%= award.award%></li>
+                        <%}%>
+                      </ul>
+                    </div>
+                    <div class="spaces">
+                      <h1 class="title-sidebar">Education</h1>
+                      <ul>
+                        <% for (let edu of data.aboutMe.education) { %>
+                          <li><%= edu.education%></li>
+                          <%}%>
+                        </ul>
+                        
+                      </div>
+                    </div>
           </div>
         </div>
         <div style="width: 70%; float: right">
@@ -144,6 +146,6 @@
         </div>
       </div>
     </div>
-    </div>
-  </body>
+</body>
+
 </html>

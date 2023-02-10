@@ -72,6 +72,23 @@ app.all("/*", (req, res, next) => {
   // req.headers["172.16.18.51"];
   next();
 });
+const PDFDocument = require("pdfkit");
+const fs = require("fs");
+
+app.get("/", (req, res, next) => {
+  console.log("hello");
+  res.render('resume')
+  // let pdfDoc = new PDFDocument();
+  // // pdfDoc.pipe(fs.createWriteStream("./uploads/SampleDocument.pdf"));
+  // pdfDoc.pipe(res);
+  // res.setHeader("Content-Type", "application/pdf");
+  // pdfDoc.text("My Sample PDF Document");
+
+  // pdfDoc.text("This is a footer", 20, pdfDoc.page.height - 50, {
+  //   lineBreak: false,
+  // });
+  // pdfDoc.end();
+});
 
 app.get("/forpdf/:id", (req, res, next) => {
   const id = req.params.id;
@@ -93,17 +110,8 @@ app.get("/forpdf/:id", (req, res, next) => {
       results[0].image = "http://172.16.16.147:3000/" + results[0].image;
 
       const data = JSON.parse(results[0].resume_data);
-      const candidate_code = data.aboutMe.candidate_code;
-      const email = data.aboutMe.email;
-      const description = data.aboutMe.description;
-      const education = data.aboutMe.education;
-      console.log("===========================", data.aboutMe.education);
 
       res.render("testcopy", {
-        code: candidate_code,
-        email: email,
-        description: description,
-        education: education,
         data: data,
         image: results[0].image,
       });
@@ -117,8 +125,58 @@ app.get("/forpdf/:id", (req, res, next) => {
   });
 });
 
-app.get("/test", (req, res, next) => {
-  res.render("testcopy");
+
+app.get("/header/:id", (req, res, next) => {
+  const id = req.params.id;
+  if (!id) return res.sendStatus(400).json({ Message: "Enter Id" });
+
+  // const query = `SELECT * FROM tbl_cv where emp_id = ${id}`;
+  const query = `SELECT * FROM tbl_cv where emp_id = ${id}`;
+
+  sql.query(query, function (err, results) {
+    if (!err) {
+      if (results.length == 0)
+        return res.json({
+          message: "No data available..! Please check your employee id",
+        });
+      if (!!results[0].resume_data) {
+        let jsonData = JSON.parse(results[0].resume_data);
+        results[0].resume_data = jsonData.replace(/\\\n/g, "");
+      }
+      results[0].image = "http://172.16.16.147:3000/" + results[0].image;
+
+      const data = JSON.parse(results[0].resume_data);
+
+      res.render("header", {
+        data: data,
+      });
+    } else {
+      console.log("Error in requesting data", err);
+      res.status(400).json({
+        message:
+          "Something went wrong ..! Please check your employee id and try again ....!",
+      });
+    }
+  });
+});
+app.get("/footer", (req, res, next) => {
+  res.render("footer");
+});
+
+
+var pdf = require("html-pdf");
+app.get("/newww", (req, res, next) => {
+  console.log('neww')
+  let options = { format: "A4" };
+  // Example of options with args //
+  // let options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox'] };
+
+  let file = { content: "<h1>Welcome to html-pdf-node</h1>" };
+  // or //
+  // let file = { url: "https://example.com" };
+  html_to_pdf.generatePdf(file, options).then((pdfBuffer) => {
+    console.log("PDF Buffer:-", pdfBuffer);
+  });
 });
 
 app.get("/getData/:id", CORS(), async (req, res, next) => {
@@ -233,5 +291,8 @@ function cmd(cmd) {
 // cmd("wkhtmltopdf http://172.16.16.147:3000/getData/681 '/home/kalpesh/Desktop/mySql_pro/te.pdf'")
 // cmd("wkhtmltopdf http://172.16.16.147:3000/forpdf '/home/kalpesh/Desktop/mySql_pro/te.pdf'")
 // cmd(
-//   "wkhtmltopdf http://172.16.16.147:3000/forpdf/681 '/home/kalpesh/Desktop/mySql_pro/test.pdf'"
+//   "wkhtmltopdf http://172.16.16.147:3000/forpdf/681 '/home/kalpesh/Desktop/mySql_pro/test1.pdf'"
 // );
+
+
+

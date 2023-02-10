@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= data.aboutMe.candidate_code%></title>
+    <link rel="stylesheet" href="../uploads/app.css">
+
+  </head>
+  <body>
+    <div style="height: 20px;width: 100%;">
+      <img src="../uploads/gradientBig.png" alt="footer" style="height: 100%;width: 100%;">
+      </div>
+      <div style="height: 150px;width:100%;border-bottom: #444;">
+      <div style="height:100%;width:33.33%;float: left;">
+      <img src="../uploads/ecosmoblogo.png" alt="logo" style="height: 150px;margin-left: 50px;">
+      </div>
+      <div style="height:100%;width:33.33%;float: left;"></div>
+      <div style="height:100%;width:33.33%;float: left;">
+      <p style="margin-left: 100px;font-size: 20px;"><b>Candidate Code:</b><%=data.aboutMe.candidate_code%></p>
+      <p style="margin-left: 100px;font-size: 20px;"><b>Profile:</b><%=data.aboutMe.role%></p>
+      <p style="margin-left: 100px;font-size: 20px;"><b>Experience:</b><%=data.aboutMe.experienceYear%></p>
+      </div>
+      </div>
+      <div style="height: 2px;width: 95%;background-color: gray;margin-left: 30px;margin-bottom: 10px;">
+  
+      </div>
+    <div class="inner">
+      <div style="margin-left: 50px; margin-right: 50px">
+        <div style="width: 24%; float: left">
+          <div
+            id="leftDiv"
+            style="
+              background-color: rgb(224, 224, 224);
+              padding-left: 10px;
+              padding-right: 10px;
+              display: flex;
+              flex-direction: column;
+            "
+          >
+            <img
+              src="<%= image%>"
+              alt="profile"
+              style="
+                border-color: red;
+                height: 220px;
+                width: 220px;
+                border-radius: 50%;
+                align-self: center;
+                margin-top: 100px;
+                vertical-align: middle;
+                object-fit: cover;
+              "
+            />
+            <div
+              style="
+                margin-top: 100px;
+                display: flex;
+                flex-direction: column;
+                margin-left: 20px;
+                margin-right: 20px;
+              "
+            >
+              <% for (let skill of data.skills) { %>
+              <h1 class="title-sidebar"><%=skill.skill%></h1>
+              <p style="margin: 0px; font-size: 20px; text-align: left">
+                <%=skill.skill%>
+              </p>
+              <div
+                style="
+                  background-color: rgb(192, 192, 192);
+                  width: 100%;
+                  border-radius: 5px;
+                  height: 22px;
+                  border: 1px solid rgb(16, 16, 16);
+                "
+              >
+                <div
+                  style="
+                    background-color: gray;
+                    color: white;
+                    height: 20px;
+                    border-radius: 5px;
+                    width: 80%;
+                  "
+                ></div>
+              </div>
+              <%}%>
+              </div>
+            </div>
+            
+            <div class="spaces">
+            
+              <h1 class="title-sidebar">Certificate</h1>
+              <ul>
+              <% for (let certi of data.extraSkill.certificate) { %>
+                <li><%= certi.certificate%></li>
+                <%}%>
+              </ul>
+            </div>
+            
+            <div class="spaces">
+              <h1 class="title-sidebar">Training</h1>
+                <ul>
+                  <% for (let training of data.extraSkill.training) { %>
+                    <li><%= training.training%></li>
+                    <%}%>
+                  </ul>
+            </div>
+            <div class="spaces">
+              <h1 class="title-sidebar">Awards</h1>
+              <ul>
+                <% for (let award of data.extraSkill.award) { %>
+                  <li><%= award.award%></li>
+                  <%}%>
+              </ul>
+            </div>
+            <div class="spaces">
+              <h1 class="title-sidebar">Education</h1>
+              <ul>
+                <% for (let edu of data.aboutMe.education) { %>
+                  <li><%= edu.education%></li>
+                  <%}%>
+              </ul>
+
+            </div>
+          </div>
+        </div>
+        <div style="width: 70%; float: right">
+          <div id="rightDiv" style="background-color: white; margin-right: 15%">
+            <div class="section-div">
+              <h3 class="title">About Me</h3>
+              <p class="aboutInfo"><%= data.aboutMe.description%></p>
+            </div>
+            <div>
+              <h3 class="title">Experience</h3>
+              <% for (let experience of data.experience) { %>
+              <div>
+                <div class="experience-sebsection">
+                  <h3 class="expSubtitle">Movie App</h3>
+                  <hr />
+                  <p class="aboutInfo"><%= experience.about_project%></p>
+                  <ul>
+                    <% for (let description of experience.description) { %>
+                    <li class="experiences-list">
+                      <p class="aboutInfo"><%= description.first%></p>
+                    </li>
+                    <%}%>
+                  </ul>
+                  <div>
+                    <h3 class="title-tools">Tools &amp; Technologies:</h3>
+                    <p class="aboutInfo"><%= experience.technologies%></p>
+                  </div>
+                </div>
+              </div>
+              <%}%>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="height: 150px;width: 100%;float: left;">
+      <div style="height: 100%;width: 50%;float: left;">
+      <p style="margin-left: 70px;line-height: 170px;font-size: 20px;">Private & Confidential</p>
+      </div>
+      <div style="height: 100%;width: 50%;float: left;">
+      <img src="../uploads/footer.png" alt="footer" style="margin-top: 40px;margin-left: 400px;">
+      </div>
+      
+        </div>
+  </body>
+</html>
