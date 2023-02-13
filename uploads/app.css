@@ -1,5 +1,6 @@
 @font-face {
     font-family: "ProximaNova";
+    font-size: small;
     src: local("ProximaNova"),
       url("./fonts/Proxima\ Nova\ Font.otf")format("opentype");
   }
@@ -7,12 +8,12 @@
   * {
     margin: 0;
     color: rgba(0, 0, 0, 0.85);
-    font-weight: 100;
+    /* font-weight: 0; */
   }
 
-  .innerr{
+  .inner{
     color: #444;
-    font-size: "16px";
+    font-size: 10px;
     overflow: unset;
   }
   h2 {
@@ -29,6 +30,12 @@
     margin: 0;
     color: rgba(0, 0, 0, 0.85);
     font-weight: 100;
+  }
+
+  p{
+    font-size: small;
+    justify-content: space-between;
+    text-align: justify;
   }
   
   .gradiantline {
@@ -66,23 +73,25 @@
   }
   
   .title {
-    font-size: 30px;
+    font-size: 20px;
     font-weight: 600;
     background-color: #e0e0e0;
     margin-bottom: 20px;
+    padding-top: 5px;
   }
   .title-sidebar {
-    font-size: 30px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 300;
     text-align: left;
+    margin-bottom: 10px;
   }
   .title-tools {
-    font-size: 30px;
+    font-size: 15px;
     font-weight: 600;
   }
   
   .aboutInfo {
-    font-size: 25px;
+    font-size: 18px;
     font-weight: 400;
   }
   
@@ -94,7 +103,7 @@
   
   .expSubtitle {
     color: blue;
-    font-size: 30px;
+    font-size: 20px;
     font-weight: 500;
   }
   .section-div {
