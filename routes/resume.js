@@ -15,6 +15,4 @@ router.get("/forpdf/:id", resumeController.pdf);
 
 router.get("/generate", resumeController.generatePdf);
 
-router.get("/one",resumeController.one)
-
 module.exports = router;

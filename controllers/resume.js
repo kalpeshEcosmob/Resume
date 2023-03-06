@@ -1,5 +1,4 @@
 const mysql2 = require("mysql2");
-const multer = require("multer");
 const { exec } = require("child_process");
 
 const sql = mysql2.createConnection({
@@ -8,30 +7,34 @@ const sql = mysql2.createConnection({
   password: "Admin@123",
   database: "Resume_",
 });
-exports.one = (req, res, next) => {
-  res.render("resume");
-};
+
 exports.getData = async (req, res, next) => {
   try {
-    const id = req.params.id;
-
-    if (!!id) {
+    const id = +req.params.id;
+    console.log("requested id is ==>", id);
+    if (!Number.isInteger(id))
+      return res.json({ status: "Please enter a valid email id" });
+    if (Number.isInteger(id)) {
       const query = `SELECT * FROM tbl_cv where emp_id = ${id}`;
 
       sql.query(query, function (err, results) {
         if (!err) {
           if (results.length == 0)
-            return res.json({
+            return res.status(404).json({
               message: "No data available..! Please check your employee id",
             });
           if (!!results[0].resume_data) {
             let jsonData = JSON.parse(results[0].resume_data);
             results[0].resume_data = jsonData.replace(/\\\n/g, "");
           }
-          results[0].image = "http://172.16.16.147:3000/" + results[0].image;
-          res
-            .status(200)
-            .json({ data: results[0].resume_data, image: results[0].image });
+          results[0].image =
+            "http://172.16.16.147:3000/images/" + results[0].image;
+
+          console.log("--------->", results[0].resume_data);
+          res.status(200).json({
+            data: JSON.parse(results[0].resume_data),
+            image: results[0].image,
+          });
         } else {
           console.log("Error in requesting data", err);
           res.status(400).json({
@@ -54,15 +57,14 @@ exports.getData = async (req, res, next) => {
 
 exports.postData = async (req, res, next) => {
   try {
-    req.headers["172.16.18.51"];
     let imageUrl;
     if (!req.file) {
-      res.json({ message: "Please provide image" });
+      return res.json({ message: "Please provide image" });
     } else {
       imageUrl = req.file.filename;
     }
     const { emp_id, emp_email, resume_data } = req.body;
-
+    console.log("resume data=======", resume_data);
     const is_valid = ValidateEmail(emp_email);
     if (!is_valid)
       return res.status(400).json({ Error: "Please enter a valid email" });
@@ -70,22 +72,20 @@ exports.postData = async (req, res, next) => {
     const query =
       "INSERT INTO tbl_cv(emp_id,emp_email,image,resume_data) VALUES ?";
     const value = [[emp_id, emp_email, imageUrl, data]];
-
     sql.query(query, [value], function (err, results) {
       if (!err) {
-        res.status(200).json({
+        console.log("Results", results);
+        return res.status(200).json({
           status: `emp succesfully inserted`,
-          data: results,
         });
-        console.log(results);
       } else {
         console.log("error", err);
-        res.status(400).send({ message: "Invalid id" });
+        return res.status(400).send({ message: "Invalid id" });
       }
     });
   } catch (error) {
     console.log("error", error);
-    res.sendStatus(400).json({ message: "Something went wrong" });
+    return res.sendStatus(400).json({ message: "Something went wrong" });
   }
 };
 
@@ -105,7 +105,7 @@ exports.header = (req, res, next) => {
         let jsonData = JSON.parse(results[0].resume_data);
         results[0].resume_data = jsonData.replace(/\\\n/g, "");
       }
-      results[0].image = "http://172.16.16.147:3000/" + results[0].image;
+      results[0].image = "http://172.16.16.147:3000/images/" + results[0].image;
 
       const data = JSON.parse(results[0].resume_data);
 
@@ -130,7 +130,7 @@ function ValidateEmail(mail) {
   if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
     return true;
   }
-  alert("You have entered an invalid email address!");
+  console.log("Error in validation of email");
   return false;
 }
 
@@ -141,7 +141,6 @@ exports.pdf = async (req, res, next) => {
   const id = req.params.id;
   if (!id) return res.sendStatus(400).json({ Message: "Enter Id" });
 
-  // const query = `SELECT * FROM tbl_cv where emp_id = ${id}`;
   const query = `SELECT * FROM tbl_cv where emp_id = ${id}`;
 
   sql.query(query, function (err, results) {
@@ -154,7 +153,7 @@ exports.pdf = async (req, res, next) => {
         let jsonData = JSON.parse(results[0].resume_data);
         results[0].resume_data = jsonData.replace(/\\\n/g, "");
       }
-      results[0].image = "http://172.16.16.147:3000/" + results[0].image;
+      results[0].image = "http://172.16.16.147:3000/images/" + results[0].image;
 
       const data = JSON.parse(results[0].resume_data);
       // cmd(command);
@@ -174,7 +173,7 @@ exports.pdf = async (req, res, next) => {
 
 exports.generatePdf = async (req, res, next) => {
   cmd(command);
-  return res.json("Pdf generatiion complete");
+  return res.json("Pdf generation complete");
 };
 
 function cmd(cmd, next) {
