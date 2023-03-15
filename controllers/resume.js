@@ -8,14 +8,14 @@ const sql = mysql2.createConnection({
   database: "Resume_",
 });
 
-exports.getData = async (req, res, next) => {
+exports.getResumeData = async (req, res, next) => {
   try {
-    const id = +req.params.id;
-    console.log("requested id is ==>", id);
-    if (!Number.isInteger(id))
+    const emp_id = +req.params.id;
+    console.log("requested emp_id is ==>", emp_id);
+    if (!Number.isInteger(emp_id))
       return res.json({ status: "Please enter a valid email id" });
-    if (Number.isInteger(id)) {
-      const query = `SELECT * FROM tbl_cv where emp_id = ${id}`;
+    if (Number.isInteger(emp_id)) {
+      const query = `SELECT * FROM tbl_cv where emp_id = ${emp_id}`;
 
       sql.query(query, function (err, results) {
         if (!err) {
@@ -24,13 +24,12 @@ exports.getData = async (req, res, next) => {
               message: "No data available..! Please check your employee id",
             });
           if (!!results[0].resume_data) {
-            let jsonData = JSON.parse(results[0].resume_data);
+            var jsonData = JSON.parse(results[0].resume_data);
             results[0].resume_data = jsonData.replace(/\\\n/g, "");
           }
           results[0].image =
             "http://172.16.16.147:3000/images/" + results[0].image;
 
-          console.log("--------->", results[0].resume_data);
           res.status(200).json({
             data: JSON.parse(results[0].resume_data),
             image: results[0].image,
@@ -48,14 +47,14 @@ exports.getData = async (req, res, next) => {
       res.status(400).json({ message: "No Record Found" });
     }
   } catch (error) {
-    console.log("Error in getting data ====>", error);
+    console.log("Error in getting data : ", error);
     res
       .status(400)
       .json({ Error: "Something went wrong ...! Please try again ...!" });
   }
 };
 
-exports.postData = async (req, res, next) => {
+exports.postResumeData = async (req, res, next) => {
   try {
     let imageUrl;
     if (!req.file) {
@@ -64,7 +63,6 @@ exports.postData = async (req, res, next) => {
       imageUrl = req.file.filename;
     }
     const { emp_id, emp_email, resume_data } = req.body;
-    console.log("resume data=======", resume_data);
     const is_valid = ValidateEmail(emp_email);
     if (!is_valid)
       return res.status(400).json({ Error: "Please enter a valid email" });
@@ -74,7 +72,7 @@ exports.postData = async (req, res, next) => {
     const value = [[emp_id, emp_email, imageUrl, data]];
     sql.query(query, [value], function (err, results) {
       if (!err) {
-        console.log("Results", results);
+        console.log("Data inserted successfully with emp_id = ", emp_id);
         return res.status(200).json({
           status: `emp succesfully inserted`,
         });
@@ -92,9 +90,7 @@ exports.postData = async (req, res, next) => {
 exports.header = (req, res, next) => {
   const id = req.params.id;
   if (!id) return res.sendStatus(400).json({ Message: "Enter Id" });
-
   const query = `SELECT * FROM tbl_cv where emp_id = ${id}`;
-
   sql.query(query, function (err, results) {
     if (!err) {
       if (results.length == 0)
@@ -157,7 +153,7 @@ exports.pdf = async (req, res, next) => {
 
       const data = JSON.parse(results[0].resume_data);
       // cmd(command);
-      return res.render("testcopy", {
+      return res.render("resume", {
         data: data,
         image: results[0].image,
       });
@@ -191,3 +187,45 @@ function cmd(cmd, next) {
 }
 
 // wkhtmltopdf --header-html http://172.16.16.147:3000/header/681  --footer-html http://172.16.16.147:3000/footer --header-spacing 10 --margin-top 53 --margin-left 0 --margin-right 0 --no-pdf-compression --page-size A4 --margin-bottom 25  http://172.16.16.147:3000/forpdf/681 '/home/kalpesh/Desktop/mySql_pro/pdf/t.pdf'
+
+exports.updateResume = async (req, res, next) => {
+  try {
+    const { emp_id, emp_email, resume_data } = req.body;
+    var imageUrl;
+    if (!req.file) {
+      const updatedQuery =
+        "UPDATE tbl_cv SET emp_email=?,resume_data=? where emp_id=?";
+      sql.query(
+        updatedQuery,
+        [emp_email, JSON.stringify(resume_data), emp_id],
+        (err, row) => {
+          if (!err) {
+            res.status(200).json({ status: `Resume updated successfully` });
+            console.log(row);
+          } else {
+            res.status(400).send(err.message);
+          }
+        }
+      );
+    } else {
+      imageUrl = req.file.filename;
+      const updatedQuery =
+        "UPDATE tbl_cv SET emp_email=?,image=?,resume_data=? where emp_id=?";
+
+      sql.query(
+        updatedQuery,
+        [emp_email, imageUrl, JSON.stringify(resume_data), emp_id],
+        (err, row) => {
+          if (!err) {
+            res.status(200).json({ status: `Resume updated successfully` });
+            console.log(row);
+          } else {
+            res.status(400).send(err.message);
+          }
+        }
+      );
+    }
+  } catch (error) {
+    console.log("Error in updating query", error);
+  }
+};

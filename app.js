@@ -46,14 +46,14 @@ app.all("/*", (req, res, next) => {
     "Access-Control-Allow-Origin",
     "http://localhost:3000 http://172.16.18.51:3000"
   );
-
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, OPTIONS, PUT, PATCH, DELETE"
   );
   next();
 });
-app.use(resumeRoutes);
+
+app.use(CORS(), resumeRoutes);
 
 app.use((error, req, res, next) => {
   console.log("Error", error);

@@ -4,9 +4,156 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title><%= data.aboutMe.candidate_code%></title>
+    <link rel="stylesheet" href="../uploads/css/app.css">
   </head>
   <body>
-    <h1>this is just for Testing</h1>
-  </body>
+    <div class="inner">
+      <div style="margin-left: 50px; margin-right: 50px">
+        <div style="width: 27%; float: left">
+          <div
+            id="leftDiv"
+            style="
+              background-color: rgb(224, 224, 224);
+              padding-left: 10px;
+              padding-right: 10px;
+              display: flex;
+              flex-direction: column;
+            "
+          >
+            <img
+              src="<%= image%>"
+              alt="profile"
+              style="
+                border-color: red;
+                height: 220px;
+                width: 220px;
+                border-radius: 50%;
+                align-self: center;
+                margin-top: 100px;
+                vertical-align: middle;
+                object-fit: cover;
+              "
+            />
+            <div
+              style="
+                margin-top: 100px;
+                display: flex;
+                flex-direction: column;
+                margin-left: 20px;
+                margin-right: 20px;
+              "
+            >
+            <h1 class="title">Primary Skills</h1>
+              <% for (let skill of data.skills) {  %>
+                
+              <!-- <h1 class="title-sidebar" id="rate" value="<%=skill.Rating%>"><%=skill.Rating%></h1> -->
+              <p style="margin: 5px; font-size: 15px; text-align: left">
+                <%=skill.skill%>
+              </p>
+              <div
+                style="
+                  background-color: rgb(192, 192, 192);
+                  width: 100%;
+                  border-radius: 0px;
+                  height: 10px;
+                  border: 2px solid rgb(16, 16, 16);
+                "
+              >
+              <div class="Rating" 
+              style="
+                    background-color: gray;
+                    color: white;
+                    height: 10px;
+                    border-radius: 0px;
+                    width: <%=skill.Rating*10%>%;
+                    "
+                ></div>
+
+              </div>
+              <%}%>
+              </div>
+              
+              <div class="spaces" >
+                
+                <h1 class="title">Certificate</h1>
+                <div class="title-sidebar">
+                  <ul>
+                    <% for (let certi of data.extraSkill.certificate) { %>
+                      <li><%= certi.certificate%></li>
+                      <%}%>
+                    </ul>
+                  </div>
+                  
+                </div>
+                <div class="spaces">
+                  <h1 class="title">Training</h1>
+                  <div class="title-sidebar">
+                  <ul>
+                    <% for (let training of data.extraSkill.training) { %>
+                      <li><%= training.training%></li>
+                      <%}%>
+                    </ul>
+                  </div>
+                </div>
+                  <div class="spaces">
+                    <h1 class="title">Awards</h1>
+                    <div class="title-sidebar">
+                    <ul>
+                      <% for (let award of data.extraSkill.award) { %>
+                        <li><%= award.award%></li>
+                        <%}%>
+                      </ul>
+                    </div>
+                    </div>
+                    <div class="spaces">
+                      <h1 class="title">Education</h1>
+                      <div class="title-sidebar">
+                      <ul>
+                        <% for (let edu of data.aboutMe.education) { %>
+                          <li><%= edu.education%></li>
+                          <%}%>
+                        </ul>
+                      </div>
+                      </div>
+                    </div>
+                    </div>
+        </div>
+        <div style="width: 65%; float: right">
+          <div id="rightDiv" style="background-color: white; margin-right: 10%">
+            <div class="section-div">
+              <h3 class="title">About Me</h3>
+              <p class="aboutInfo" style="text-align: left;"><%= data.aboutMe.description%></p>
+            </div>
+            <div>
+              <h3 class="title">Experience</h3>
+              <% for (let experience of data.experience) { %>
+              <div>
+                <div class="experience-sebsection">
+                  <h3 class="expSubtitle" style="padding-top: 10px; padding-bottom: 10px;"><%= experience.title%></h3>
+                  <hr/>
+                  <p class="aboutInfo" style="padding-top: 30px;"><%= experience.about_project%></p>
+                  <div style="padding-top: 30px;">
+                    <ul>
+                      <% for (let description of experience.description) { %>
+                        <li class="experiences-list">
+                          <p class="aboutInfo"><%= description%></p>
+                        </li>
+                        <%}%>
+                      </ul>
+                    </div>
+                </div>
+                <div>
+                  <h3 class="title">Tools &amp; Technologies:</h3>
+                  <p class="aboutInfo"><%= experience.technologies%></p>
+                </div>
+              </div>
+              <%}%>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</body>
 </html>
