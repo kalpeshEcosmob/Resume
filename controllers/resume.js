@@ -1,5 +1,5 @@
 const mysql2 = require("mysql2");
-const { exec } = require("child_process");
+const ValidateEmail = require("../utils/functions").ValidateEmail;
 
 const sql = mysql2.createConnection({
   host: "localhost",
@@ -11,7 +11,7 @@ const sql = mysql2.createConnection({
 exports.getResumeData = async (req, res, next) => {
   try {
     const emp_id = +req.params.id;
-    console.log("requested emp_id is ==>", emp_id);
+    console.log("Requested resume data of emp_id = ", emp_id);
     if (!Number.isInteger(emp_id))
       return res.json({ status: "Please enter a valid email id" });
     if (Number.isInteger(emp_id)) {
@@ -122,17 +122,6 @@ exports.footer = async (req, res, next) => {
   res.render("footer");
 };
 
-function ValidateEmail(mail) {
-  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
-    return true;
-  }
-  console.log("Error in validation of email");
-  return false;
-}
-
-const command =
-  "wkhtmltopdf --header-html http://172.16.16.147:3000/header/681  --footer-html http://172.16.16.147:3000/footer --header-spacing 10 --margin-top 53 --margin-left 0 --margin-right 0 --no-pdf-compression --page-size A4 --margin-bottom 25  http://172.16.16.147:3000/forpdf/681 '/home/kalpesh/Desktop/mySql_pro/pdf/t11.pdf'";
-
 exports.pdf = async (req, res, next) => {
   const id = req.params.id;
   if (!id) return res.sendStatus(400).json({ Message: "Enter Id" });
@@ -152,7 +141,6 @@ exports.pdf = async (req, res, next) => {
       results[0].image = "http://172.16.16.147:3000/images/" + results[0].image;
 
       const data = JSON.parse(results[0].resume_data);
-      // cmd(command);
       return res.render("resume", {
         data: data,
         image: results[0].image,
@@ -172,22 +160,6 @@ exports.generatePdf = async (req, res, next) => {
   return res.json("Pdf generation complete");
 };
 
-function cmd(cmd, next) {
-  exec(cmd, (error, stdout, stderr) => {
-    if (error) {
-      console.log(`error: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      console.log(`stderr: ${stderr}`);
-      return;
-    }
-    console.log(`stdout: ${stdout}`);
-  });
-}
-
-// wkhtmltopdf --header-html http://172.16.16.147:3000/header/681  --footer-html http://172.16.16.147:3000/footer --header-spacing 10 --margin-top 53 --margin-left 0 --margin-right 0 --no-pdf-compression --page-size A4 --margin-bottom 25  http://172.16.16.147:3000/forpdf/681 '/home/kalpesh/Desktop/mySql_pro/pdf/t.pdf'
-
 exports.updateResume = async (req, res, next) => {
   try {
     const { emp_id, emp_email, resume_data } = req.body;
@@ -200,6 +172,7 @@ exports.updateResume = async (req, res, next) => {
         [emp_email, JSON.stringify(resume_data), emp_id],
         (err, row) => {
           if (!err) {
+            console.log(`Updated successfully at emp_id = `, emp_id);
             res.status(200).json({ status: `Resume updated successfully` });
             console.log(row);
           } else {
@@ -217,6 +190,7 @@ exports.updateResume = async (req, res, next) => {
         [emp_email, imageUrl, JSON.stringify(resume_data), emp_id],
         (err, row) => {
           if (!err) {
+            console.log(`Updated successfully at emp_id = `, emp_id);
             res.status(200).json({ status: `Resume updated successfully` });
             console.log(row);
           } else {

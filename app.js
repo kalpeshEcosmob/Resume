@@ -2,7 +2,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const CORS = require("cors");
 const multer = require("multer");
-const { exec } = require("child_process");
 const resumeRoutes = require("./routes/resume");
 
 const fileStorage = multer.diskStorage({
@@ -65,38 +64,5 @@ app.use((error, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Running at port ${PORT}`);
 });
-
-function ValidateEmail(mail) {
-  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
-    return true;
-  }
-  alert("You have entered an invalid email address!");
-  return false;
-}
-
-function cmd(cmd) {
-  exec(cmd, (error, stdout, stderr) => {
-    if (error) {
-      console.log(`error: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      console.log(`stderr: ${stderr}`);
-      return;
-    }
-    console.log(`stdout: ${stdout}`);
-  });
-}
-// cmd("wkhtmltopdf http://172.16.16.147:3000/getData/681 '/home/kalpesh/Desktop/mySql_pro/te.pdf'")
-// cmd("wkhtmltopdf http://172.16.16.147:3000/forpdf '/home/kalpesh/Desktop/mySql_pro/te.pdf'")
-// cmd(
-//   "wkhtmltopdf http://172.16.16.147:3000/forpdf/681 '/home/kalpesh/Desktop/mySql_pro/pdf/test1.pdf'"
-// );
-
-// wkhtmltopdf --header-html http://172.16.16.147:3000/header/681  --footer-html http://172.16.16.147:3000/footer --header-spacing 10 --margin-top 45 --margin-left 0 --margin-right 0  http://172.16.16.147:3000/forpdf/681 '/home/kalpesh/Desktop/mySql_pro/pdf/t.pdf'
-
-// wkhtmltopdf --header-html http://172.16.16.147:3000/header/681  --footer-html http://172.16.16.147:3000/footer --header-spacing 10 --margin-top 53 --margin-left 0 --margin-right 0 --no-pdf-compression --page-size A4 --margin-bottom 25  http://172.16.16.147:3000/forpdf/681 '/home/kalpesh/Desktop/mySql_pro/pdf/t.pdf'
-
-// wkhtmltopdf --header-html http://172.16.16.147:3000/header/681  --footer-html http://172.16.16.147:3000/footer --header-spacing 10 --margin-top 53 --margin-left 0 --margin-right 0 --no-pdf-compression --page-size A4 --margin-bottom 25  http://172.16.16.147:3000/forpdf/681 '/home/kalpesh/Desktop/mySql_pro/pdf/t.pdf'
 
 // wkhtmltopdf --header-html http://172.16.16.147:3000/header/422  --footer-html http://172.16.16.147:3000/footer --header-spacing 10 --margin-top 53 --margin-left 0 --margin-right 0 --no-pdf-compression --page-size A4 --margin-bottom 25  http://172.16.16.147:3000/forpdf/422 '/home/kalpesh/Desktop/ResumeMaking/pdf/422.pdf'
