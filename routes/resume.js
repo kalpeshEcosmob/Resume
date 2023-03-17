@@ -3,18 +3,25 @@ const CORS = require("cors");
 const resumeController = require("../controllers/resume");
 const router = express.Router();
 
-router.get("/getData/:id", CORS(), resumeController.getResumeData);
+router.get("/resumeData/:value", resumeController.getResumeDataTest);
 
-router.post("/postData", CORS(), resumeController.postResumeData);
+router.post("/resumeData", resumeController.postResumeData);
 
-router.get("/header/:id", CORS(), resumeController.header);
+router.put("/update", resumeController.updateResume);
 
-router.get("/footer", CORS(), resumeController.footer);
+router.get("/isValidEmail/:email", resumeController.isValidEmail);
 
-router.get("/forpdf/:id", CORS(), resumeController.pdf);
 
-router.get("/generate", CORS(), resumeController.generatePdf);
+//.............to create pdf..................//
 
-router.put("/update", CORS(), resumeController.updateResume);
+router.get("/header/:id", resumeController.header);
+
+router.get("/footer", resumeController.footer);
+
+router.get("/forpdf/:id", resumeController.pdf);
+
+router.get("/generate", resumeController.generatePdf);
+
+//..............................................//
 
 module.exports = router;

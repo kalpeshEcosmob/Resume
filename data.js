@@ -9,58 +9,77 @@
 
 //   console.log("Delete File successfully.");
 // });
-const dummyData = {
+
+const dummyDataKalpesh = {
   aboutMe: {
-    candidate_code: "681",
-    email: "varshil.shah@ecosmob.com",
-    description:
-      "Completed a RectJS training and developed a strong understanding of ReactJs, redux and related libraries. Developed a personal project using ReactJs and material Ui to create a movie app.Familiar with HTML, CSS, JavaScript & ReactJS. Good understanding of RESTful APIs & integrating them into Web Apps. Strong willingness to learn new skills and passion for technology",
-    education: ["Bachelor of Engineering(Computer Engineering)"],
+    candidate_code: "693",
+    email: "kalpesh.makwana@ecosmob.com",
+    description: "",
+    education: ["Bachlers in Engineering(Information & Technology)"],
     role: "Software Engineer",
     experienceYear: 0,
-    experienceMonth: 4,
+    experienceMonth: 3,
   },
   skills: [
-    { skill: "Html", Rating: 6 },
-    { skill: "Css", Rating: 6 },
-    { skill: "JavaScript", Rating: 7 },
-    { skill: "ReactJs", Rating: 8 },
-    { skill: "Firebase", Rating: 8 },
-    { skill: "Git", Rating: 6 },
+    { skill: "PHP", Rating: 7 },
+    { skill: "Codeigniter", Rating: 8 },
+    { skill: "Laravel", Rating: 8 },
+    { skill: "Linux", Rating: 6 },
+    { skill: "MYSQL", Rating: 6 },
+    { skill: "Visual Studio Code", Rating: 8 },
   ],
   experience: [
     {
-      title: "Movie App",
-      technologies: "ReactJs, Material Ui, Firebase, TMDB API",
+      title: "Feedfleet",
+      technologies: "Codeigniter, PHP, HTML, JavaScript, jQuery, Stripe,MYSQL.",
       about_project:
-        "MovieApp is a web application that helps users to check the trending, upcoming, and popular movies. On VEE5 the user can get the title, and overview as well as will also be able to rate the movies as well as he/she can add their favorite movies to the watchlist .  ",
-      description: [
-        "Developed user interface using Material UI from scratch",
-        " Implemented firebase for login & registration and Firestore database for storing the ratings and watchlist data",
-        "Implemented redux for maintaining and updating the data over the application,",
-
-        "Integrated API for getting the data",
-        "Implemented formik & Yup for form validation purpose and error boundaries for generating fallback UI",
-      ],
-      role: "Software Developer",
+        "Feedfleet is a premier remote video capturing platform that enables customers from all around the world to record and share testimonials and messages. We use our advanced technology and resources to create unique testimonials that help elevate business.",
+      description: [""],
+      role: "Developer",
     },
     {
-      title: "Crypto App",
-      technologies: "ReactJs, NodeJs, CSS , Coingecko API, Socket Io",
+      title: "GoldArrow",
+      technologies: "Bitrix24, PHP, JQuery, Bootstrap,MySql",
       about_project:
-        "Crytpo App is a web app for tracking the price of cryptocurrencies. Here the user will be able to watch the price of the cryptos, their logos, market cap, and ups and down in the last twenty-four hours. ",
+        " CRM system for Customer Management, Feature Of Lead,Deal,contact,Company Management. Provide Additional Feature for documents Management, Customer Portal and Some features for Tax management.",
       description: [
-        "Developed user interface from scratch",
-        "Implemented redux for maintaining and updating the data over the application.",
-        "Created backend using NodeJs for implementing Socket Io to get the live updates about the change in price.",
+        "Understanding the queries/ bugs mentioned in the github issues by the customers and taking actions accordingly.",
+        "Solving bugs given by the client.",
       ],
-      role: "Software Developer",
+      role: "Developer",
+    },
+    {
+      title: "Tuilly",
+      technologies:
+        "PHP, Laravel, Visual Studio,HTML, CSS, Javascript, Jquery, Ajax,Rest API, MYSQL",
+      about_project:
+        "Tuilly Concepts Private Limited is an e-commerce venture that provides plants and plants-related items like plant pots and others like clothes, jewelry home decor products, and anything needed at your doorstep.",
+      description: [
+        "Writing and modifying code to implement various functionalities. ",
+      ],
+      role: "Developer",
+    },
+    {
+      title: "Jain Bandhu Trust",
+      technologies: "PHP,CI, jQuery, Ecommerce, JavaScript",
+      about_project:
+        "Jain Bandhu Trust is a leading PAN card services provider in India. Their services includes CA Consultancy Service, PAN Card, Income Tax Return File, GST, Registration & GST Filing, Gumasta, Nagar Nigam, Food, License, Company Audit, Trust / Samiti / NGO Registration, All Financial Solution, Digital Signature (DSC), ISO / Trademark / Copyright",
+      description: [""],
+      role: "Developer",
+    },
+    {
+      title: "Hop On India",
+      technologies: "PHP, jQuery, Ecommerce, laravel, JavaScript",
+      about_project:
+        "Buying subscription and tickets for travel zones. Subscription wise unlimited entries. Visiting virtual and navigate mode long distance tours",
+      description: [""],
+      role: "Developer",
     },
   ],
   extraSkill: {
     certificate: [""],
     award: [""],
-    training: ["ReactJs"],
+    training: [""],
   },
   image: { uid: "rc-upload-1677846265186-3" },
 };

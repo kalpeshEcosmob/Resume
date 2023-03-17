@@ -1,0 +1,102 @@
+router.get("/getData/:id", CORS(), resumeController.getResumeData);
+
+exports.getResumeData = async (req, res, next) => {
+  try {
+    const emp_id = +req.params.id;
+    console.log("Requested resume data of emp_id = ", emp_id);
+    if (!Number.isInteger(emp_id))
+      return res.json({ status: "Please enter a valid email id" });
+    if (Number.isInteger(emp_id)) {
+      const query = `SELECT * FROM tbl_cv where emp_id = ${emp_id}`;
+
+      sql.query(query, function (err, results) {
+        if (!err) {
+          if (results.length == 0)
+            return res.status(404).json({
+              message: "No data available..! Please check your employee id",
+            });
+          if (!!results[0].resume_data) {
+            var jsonData = JSON.parse(results[0].resume_data);
+            results[0].resume_data = jsonData.replace(/\\\n/g, "");
+          }
+          results[0].image =
+            "http://172.16.16.147:3000/images/" + results[0].image;
+
+          res.status(200).json({
+            data: JSON.parse(results[0].resume_data),
+            image: results[0].image,
+          });
+        } else {
+          console.log("Error in requesting data", err);
+          res.status(400).json({
+            message:
+              "Something went wrong ..! Please check your employee id and try again ....!",
+          });
+        }
+      });
+    } else {
+      console.log("No Record Found", err);
+      res.status(400).json({ message: "No Record Found" });
+    }
+  } catch (error) {
+    console.log("Error in getting data : ", error);
+    res
+      .status(400)
+      .json({ Error: "Something went wrong ...! Please try again ...!" });
+  }
+};
+
+
+.//////////////////////////////////////////////////////////////////////////////./
+
+router.get("/findbyemail/:email", CORS(), resumeController.byEmail);
+
+
+exports.byEmail = async (req, res, next) => {
+  try {
+    const emp_email = req.params.email;
+    console.log("Requested resume data of employee email :", emp_email);
+    if (!emp_email)
+      return res.json({ status: "Please enter a valid email id" });
+    if (emp_email) {
+      const query = `SELECT * FROM tbl_cv where emp_email = "${emp_email}"`;
+
+      sql.query(query, function (err, results) {
+        if (!err) {
+          if (results.length == 0)
+            return res.status(404).json({
+              message: "No data available..! Please check your employee email",
+            });
+          if (!!results[0].resume_data) {
+            var jsonData = JSON.parse(results[0].resume_data);
+            results[0].resume_data = jsonData.replace(/\\\n/g, "");
+          }
+          results[0].image =
+            "http://172.16.16.147:3000/images/" + results[0].image;
+
+          res.status(200).json({
+            data: JSON.parse(results[0].resume_data),
+            image: results[0].image,
+          });
+        } else {
+          console.log("Error in requesting data", err);
+          res.status(400).json({
+            message:
+              "Something went wrong ..! Please check your employee id and try again ....!",
+          });
+        }
+      });
+    } else {
+      console.log("No Record Found", err);
+      res.status(400).json({ message: "No Record Found" });
+    }
+  } catch (error) {
+    console.log("Something went wrong", error);
+    res
+      .status(400)
+      .json({ message: "Something went wrong please try again..!" });
+  }
+};
+
+
+
