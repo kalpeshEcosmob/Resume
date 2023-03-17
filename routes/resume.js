@@ -1,26 +1,27 @@
 const express = require("express");
-const CORS = require("cors");
 const resumeController = require("../controllers/resume");
 const router = express.Router();
 
-router.get("/resumeData/:value", resumeController.getResumeDataTest);
+router.get("/resumeData", resumeController.getResumeData);
+
+router.get("/resumeDataOld/:value", resumeController.getResumeDataOldMethed);
 
 router.post("/resumeData", resumeController.postResumeData);
 
-router.put("/update", resumeController.updateResume);
+router.put("/resumeData", resumeController.updateResumeData);
 
-router.get("/isValidEmail/:email", resumeController.isValidEmail);
-
+router.get("/isValidEmail", resumeController.isValidEmail);
 
 //.............to create pdf..................//
+//.. creating resume pdf from backend so i have commented this routes../
 
-router.get("/header/:id", resumeController.header);
+// router.get("/header/:id", resumeController.header);
 
-router.get("/footer", resumeController.footer);
+// router.get("/footer", resumeController.footer);
 
-router.get("/forpdf/:id", resumeController.pdf);
+// router.get("/forpdf/:id", resumeController.pdf);
 
-router.get("/generate", resumeController.generatePdf);
+// router.get("/generate", resumeController.generatePdf);
 
 //..............................................//
 

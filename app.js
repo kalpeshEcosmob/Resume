@@ -64,5 +64,3 @@ app.use((error, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Running at port ${PORT}`);
 });
-
-// wkhtmltopdf --header-html http://172.16.16.147:3000/header/422  --footer-html http://172.16.16.147:3000/footer --header-spacing 10 --margin-top 53 --margin-left 0 --margin-right 0 --no-pdf-compression --page-size A4 --margin-bottom 25  http://172.16.16.147:3000/forpdf/422 '/home/kalpesh/Desktop/ResumeMaking/pdf/422.pdf'

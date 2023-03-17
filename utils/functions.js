@@ -1,3 +1,35 @@
+const sql = require("../database/database").sql;
+
+// const database = async (query) => {
+//   sql.query(query, (err, result) => {
+//     if (!err) {
+//       console.log(result);
+//       return result;
+//     } else {
+//       console.log("err", err);
+//     }
+//   });
+// };
+
+// async function database(query) {
+//   console.log(query);
+//   const obj = { name: "Shyam" };
+//   return obj;
+// }
+
+function database(query) {
+  let data;
+  sql.query(query, (err, result) => {
+    if (!err) {
+      console.log("-------------------->", result);
+      return "data";
+    } else {
+      console.log("err", err);
+    }
+  });
+  return data;
+}
+
 const ValidateEmail = (mail) => {
   if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
     return true;
@@ -20,4 +52,4 @@ const cmd = (cmd) => {
   });
 };
 
-module.exports = { cmd, ValidateEmail };
+module.exports = { cmd, ValidateEmail, database };
