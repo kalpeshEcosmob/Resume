@@ -7,56 +7,12 @@ const database = require("../utils/functions").database;
 exports.getResumeData = async (req, res, next) => {
   try {
     const verify = await verifyToken(req.headers.token);
-    if (verify.payload.email === "Error") {
+    if (verify === "Error") {
       return res.status(403).json({ message: "Invalid token" });
     }
     const emp_email = verify.payload.email;
     const query = `SELECT * FROM tbl_cv where emp_email = "${emp_email}"`;
-
-    const d = await database(query);
-    console.log("--->", d);
-
-    sql.query(query, function (err, results) {
-      if (!err) {
-        if (results.length == 0)
-          return res.status(404).json({
-            message: "No data available..! Please check your employee id",
-          });
-        if (!!results[0].resume_data) {
-          var data = JSON.parse(results[0].resume_data);
-        }
-        results[0].image =
-          "http://172.16.16.147:3000/images/" + results[0].image;
-
-        res.status(200).json({
-          data: data,
-          image: results[0].image,
-        });
-      } else {
-        console.log("Error in requesting data", err);
-        res.status(400).json({
-          message:
-            "Something went wrong ..! Please check your employee id and try again ....!",
-        });
-      }
-    });
-  } catch (error) {
-    console.log("Error in getting data : ", error);
-    res.status(403).json({ message: "Invalid token" });
-  }
-};
-
-exports.getResumeDataOldMethed = async (req, res, next) => {
-  try {
-    let query;
-    const value = +req.params.value;
-    if (!Number.isInteger(value)) {
-      console.log("Request of data = ", req.params.value);
-      query = `SELECT * FROM tbl_cv where emp_email = "${req.params.value}"`;
-    } else {
-      console.log("Request of data = ", value);
-      query = `SELECT * FROM tbl_cv where emp_id = ${value}`;
-    }
+    console.log("requested resume data for email ", emp_email);
     sql.query(query, function (err, results) {
       if (!err) {
         if (results.length == 0)
@@ -85,6 +41,63 @@ exports.getResumeDataOldMethed = async (req, res, next) => {
     console.log("Error in getting data : ", error);
     res
       .status(400)
+      .json({ message: "Something went wrong...! Please try again...!" });
+  }
+};
+
+exports.getResumeDataOldMethed = async (req, res, next) => {
+  try {
+    let query;
+    const value = +req.params.value;
+    if (!Number.isInteger(value)) {
+      console.log("Request of data = ", req.params.value);
+      query = `SELECT * FROM tbl_cv where emp_email = "${req.params.value}"`;
+    } else {
+      console.log("Request of data = ", value);
+      query = `SELECT * FROM tbl_cv where emp_id = ${value}`;
+    }
+    const results = await database(query);
+    if (results.length == 0)
+      return res.status(404).json({
+        message: "No data available..! Please check your employee id",
+      });
+
+    if (!!results[0].resume_data) {
+      var data = JSON.parse(results[0].resume_data);
+    }
+    results[0].image = "http://172.16.16.147:3000/images/" + results[0].image;
+    res.status(200).json({
+      data: data,
+      image: results[0].image,
+    });
+    // sql.query(query, function (err, results) {
+    //   if (!err) {
+    //     if (results.length == 0)
+    //       return res.status(404).json({
+    //         message: "No data available..! Please check your employee id",
+    //       });
+    //     if (!!results[0].resume_data) {
+    //       var data = JSON.parse(results[0].resume_data);
+    //     }
+    //     results[0].image =
+    //       "http://172.16.16.147:3000/images/" + results[0].image;
+
+    //     res.status(200).json({
+    //       data: data,
+    //       image: results[0].image,
+    //     });
+    //   } else {
+    //     console.log("Error in requesting data", err);
+    //     res.status(400).json({
+    //       message:
+    //         "Something went wrong ..! Please check your employee id and try again ....!",
+    //     });
+    //   }
+    // });
+  } catch (error) {
+    console.log("Error in getting data : ", error);
+    res
+      .status(400)
       .json({ Error: "Something went wrong ...! Please try again ...!" });
   }
 };
@@ -92,7 +105,7 @@ exports.getResumeDataOldMethed = async (req, res, next) => {
 exports.postResumeData = async (req, res, next) => {
   try {
     const verify = await verifyToken(req.headers.token);
-    if (verify.payload.email === "Error") {
+    if (verify === "Error") {
       return res.status(403).json({ message: "Invalid token" });
     }
     let imageUrl;
@@ -105,7 +118,6 @@ exports.postResumeData = async (req, res, next) => {
     const is_valid = ValidateEmail(emp_email);
     if (!is_valid)
       return res.status(400).json({ Error: "Please enter a valid email" });
-    // const data = JSON.stringify(resume_data);
     const query =
       "INSERT INTO tbl_cv(emp_id,emp_email,image,resume_data) VALUES ?";
     const value = [[emp_id, emp_email, imageUrl, resume_data]];
@@ -129,8 +141,8 @@ exports.postResumeData = async (req, res, next) => {
 exports.updateResumeData = async (req, res, next) => {
   try {
     const verify = await verifyToken(req.headers.token);
-    if (verify.payload.email === "Error") {
-      return res.status(403).json({ message: "Invalid token" });
+    if (verify === "Error") {
+      return res.status(403).json({ message: "Invalid Token" });
     }
     const { emp_id, emp_email, resume_data } = req.body;
     var imageUrl;

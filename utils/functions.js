@@ -1,33 +1,16 @@
 const sql = require("../database/database").sql;
 
-// const database = async (query) => {
-//   sql.query(query, (err, result) => {
-//     if (!err) {
-//       console.log(result);
-//       return result;
-//     } else {
-//       console.log("err", err);
-//     }
-//   });
-// };
-
-// async function database(query) {
-//   console.log(query);
-//   const obj = { name: "Shyam" };
-//   return obj;
-// }
-
-function database(query) {
-  let data;
-  sql.query(query, (err, result) => {
-    if (!err) {
-      console.log("-------------------->", result);
-      return "data";
-    } else {
-      console.log("err", err);
-    }
+async function database(query) {
+  const result = new Promise((resolve, reject) => {
+    sql.query(query, (err, result) => {
+      if (!err) {
+        resolve(result);
+      } else {
+        reject(err);
+      }
+    });
   });
-  return data;
+  return result;
 }
 
 const ValidateEmail = (mail) => {

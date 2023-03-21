@@ -32,7 +32,7 @@ const dummyDataKalpesh = {
     {
       title: "Book-Shop",
       technologies:
-        " HTML , CSS , JavaScript, Mongo DB , Node , Express , Stripe ",
+        " HTML , CSS , JavaScript, Mongo DB , Node , Express , Stripe , ejs ",
       about_project:
         "Book shop application using node js , where user can login and logout , create , update , view and purchase book",
       description: [""],
